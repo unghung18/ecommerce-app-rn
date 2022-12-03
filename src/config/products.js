@@ -1,4 +1,4 @@
-const recipes = [
+const products = [
     {
         id: 1,
         name: "Red Onnion",
@@ -81,4 +81,4 @@ const recipes = [
     },
 ];
 
-export default recipes;
+export default products;

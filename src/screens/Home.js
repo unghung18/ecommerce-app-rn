@@ -9,9 +9,10 @@ import {
     View,
     Dimensions,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import categories from "../config/data";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const { width } = Dimensions.get("window");
 
 const SPACING = 10;
@@ -19,7 +20,24 @@ const SPACING = 10;
 const ITEM_WIDTH = width / 2 - SPACING * 3;
 
 const Home = ({ navigation }) => {
+    const [user, setUser] = useState('');
+    const [textSearch, settextSearch] = useState("");
     const [activeCategory, setActiveCategory] = useState(0);
+
+    const getUserData = async () => {
+        let curUser = await AsyncStorage.getItem('curUser');
+        curUser = JSON.parse(curUser);
+        setUser(curUser);
+    };
+
+    const onSearch = () => {
+        if (textSearch.trim() !== '') {
+            navigation.navigate('Search', { text: textSearch })
+        }
+    }
+    useEffect(() => {
+        getUserData();
+    }, []);
     return (
         <SafeAreaView style={{ backgroundColor: '#fff' }}>
             <ScrollView>
@@ -45,7 +63,7 @@ const Home = ({ navigation }) => {
                                     color: '#000',
                                 }}
                             >
-                                Marcus white
+                                {user && user.name}
                             </Text>
                             <Text
                                 style={{
@@ -90,8 +108,11 @@ const Home = ({ navigation }) => {
                                 marginRight: SPACING,
                                 flex: 1
                             }}
+                            onChangeText={settextSearch}
+                            value={textSearch}
+                            onBlur={onSearch}
                         />
-                        <TouchableOpacity style={{ marginRight: 5 }}>
+                        <TouchableOpacity style={{ marginRight: 5 }} onPress={onSearch}>
                             <Ionicons name="search" color='#000' size={SPACING * 2.5} />
                         </TouchableOpacity>
                         <TouchableOpacity>
@@ -163,7 +184,7 @@ const Home = ({ navigation }) => {
                                         },
                                     ]}
                                     key={item.id}
-                                    onPress={() => navigation.navigate('ProductDetail', { detail: item })}
+                                    onPress={() => navigation.navigate('ProductDetail', { item: item })}
                                 >
                                     <Image
                                         style={{

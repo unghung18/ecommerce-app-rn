@@ -49,7 +49,7 @@ function BottomTabNavigator() {
                             <FontAwesome5
                                 name="home"
                                 size={20}
-                                color={focused ? 'red' : 'gray'}
+                                color={focused ? '#2FDBBC' : 'gray'}
                             ></FontAwesome5>
                         </View>
                     )
@@ -67,34 +67,12 @@ function BottomTabNavigator() {
                             <FontAwesome5
                                 name="heart"
                                 size={20}
-                                color={focused ? 'red' : 'gray'}
+                                color={focused ? '#2FDBBC' : 'gray'}
                             ></FontAwesome5>
                         </View>
                     )
                 }} />
-            <Tab.Screen
-                name='Search'
-                component={Search}
-                options={{
-                    tabBarIcon: () => (
-                        <View style={{
-                            width: 55,
-                            height: 55,
-                            backgroundColor: '#000',
-                            borderRadius: 30,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginBottom: Platform.OS == "android" ? 50 : 30
 
-                        }}>
-                            <FontAwesome5
-                                name="search"
-                                size={20}
-                                color='white'
-                            ></FontAwesome5>
-                        </View>
-                    )
-                }} />
             < Tab.Screen
                 name='Cart'
                 component={Cart}
@@ -108,10 +86,11 @@ function BottomTabNavigator() {
                             <FontAwesome5
                                 name="shopping-cart"
                                 size={20}
-                                color={focused ? 'red' : 'gray'}
+                                color={focused ? '#2FDBBC' : 'gray'}
                             ></FontAwesome5>
                         </View>
-                    )
+                    ),
+                    tabBarStyle: { display: "none" },
                 }}
             />
             < Tab.Screen
@@ -127,7 +106,7 @@ function BottomTabNavigator() {
                             <FontAwesome5
                                 name="user"
                                 size={20}
-                                color={focused ? 'red' : 'gray'}
+                                color={focused ? '#2FDBBC' : 'gray'}
                             ></FontAwesome5>
                         </View>
                     )

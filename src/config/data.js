@@ -1,25 +1,25 @@
-import recipes from "./recipes";
+import products from "./products";
 
 const categories = [
     {
         id: 1,
         title: "All",
-        recipes: recipes,
+        recipes: products,
     },
     {
         id: 2,
         title: "Headphones",
-        recipes: [...recipes.slice(4, 8)],
+        recipes: [...products.slice(4, 8)],
     },
     {
         id: 3,
         title: "Earbuds",
-        recipes: [...recipes.slice(3, 7)],
+        recipes: [...products.slice(3, 7)],
     },
     {
         id: 4,
         title: "Wired",
-        recipes: [...recipes.slice(2, 6)],
+        recipes: [...products.slice(2, 6)],
     },
 ];
 

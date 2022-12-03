@@ -1,11 +1,49 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, ScrollView, ImageBackground, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, ScrollView, ImageBackground, Dimensions, ToastAndroid } from 'react-native';
 const SPACING = 10;
 const { height } = Dimensions.get("window");
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useState } from 'react';
 
 export default function ProductDetail({ route, navigation }) {
-    const { detail } = route.params;
+    const { item } = route.params;
+    const [amount, setAmount] = useState(1);
+
+    const addToCart = async () => {
+        let cartData = await AsyncStorage.getItem("cartData");
+        if (cartData) {
+            cartData = JSON.parse(cartData);
+            cartData.push({
+                id: item.id,
+                name: item.name,
+                image: item.image,
+                price: item.price,
+                cate: item.cate,
+                amount: amount,
+            });
+            ToastAndroid.show(
+                'Item Added Successfully to cart',
+                ToastAndroid.SHORT,
+            );
+        } else {
+            cartData = [];
+            cartData.push({
+                id: item.id,
+                name: item.name,
+                image: item.image,
+                price: item.price,
+                cate: item.cate,
+                amount: amount,
+            });
+            ToastAndroid.show(
+                'Item Added Successfully to cart',
+                ToastAndroid.SHORT,
+            );
+        }
+        AsyncStorage.setItem("cartData", JSON.stringify(cartData));
+    };
+
     return (
         <>
             <ScrollView>
@@ -20,7 +58,7 @@ export default function ProductDetail({ route, navigation }) {
                             justifyContent: "space-between",
                         }}
                         resizeMode="contain"
-                        source={detail.image}
+                        source={item.image}
                     >
                         <TouchableOpacity
                             style={{
@@ -49,7 +87,7 @@ export default function ProductDetail({ route, navigation }) {
                                 borderRadius: SPACING * 2.5,
                             }}
                         >
-                            <Ionicons name="share" size={SPACING * 2.5} color='#666' />
+                            <Ionicons name="heart" size={SPACING * 2.5} color='#666' />
                         </TouchableOpacity>
                     </ImageBackground>
                     <View
@@ -77,7 +115,7 @@ export default function ProductDetail({ route, navigation }) {
                                         fontWeight: "700",
                                     }}
                                 >
-                                    {detail.name}
+                                    {item.name}
                                 </Text>
                             </View>
                             <View
@@ -104,14 +142,14 @@ export default function ProductDetail({ route, navigation }) {
                                         color: '#000',
                                     }}
                                 >
-                                    ${detail.price}
+                                    ${item.price}
                                 </Text>
                             </View>
                         </View>
-                        <Text>{detail.cate}</Text>
+                        <Text>{item.cate}</Text>
                         <View>
                             <Text>
-                                {detail.description}
+                                {item.description}
                             </Text>
                         </View>
                         {/*  <View
@@ -264,11 +302,18 @@ export default function ProductDetail({ route, navigation }) {
             <SafeAreaView>
                 <View style={{ padding: SPACING * 2, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => setAmount(prev => prev + 1)}>
                             <Ionicons name='add-circle' size={SPACING * 4}></Ionicons>
                         </TouchableOpacity>
-                        <Text style={{ width: 20, alignSelf: 'center' }}>1</Text>
-                        <TouchableOpacity>
+                        <Text style={{ width: 20, alignSelf: 'center' }}>{amount}</Text>
+                        <TouchableOpacity onPress={() => setAmount(prev => {
+                            if (prev == 1) {
+                                return 1;
+                            }
+                            else {
+                                return prev - 1
+                            }
+                        })}>
                             <Ionicons name='remove-circle' size={SPACING * 4}></Ionicons>
                         </TouchableOpacity>
                     </View>
@@ -280,7 +325,9 @@ export default function ProductDetail({ route, navigation }) {
                             alignItems: "center",
                             justifyContent: "center",
                             borderRadius: SPACING * 2,
+                            flex: 1
                         }}
+                        onPress={addToCart}
                     >
                         <Text
                             style={{
@@ -289,17 +336,7 @@ export default function ProductDetail({ route, navigation }) {
                                 fontWeight: "700",
                             }}
                         >
-                            Choose this for
-                        </Text>
-                        <Text
-                            style={{
-                                fontSize: SPACING * 2,
-                                color: 'yellow',
-                                fontWeight: "700",
-                                marginLeft: SPACING / 2,
-                            }}
-                        >
-                            $ {detail.price}
+                            Add to cart
                         </Text>
                     </TouchableOpacity>
                 </View>
